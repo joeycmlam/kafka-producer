@@ -1,3 +1,4 @@
+from datetime import datetime
 from kafka import KafkaProducer
 
 
@@ -25,6 +26,22 @@ def publish_message_from_console(p, topic_name):
             print('Excetion in publish_message_from_console')
             print(str(ex))
 
+def publish_message_for_performance_test(p, topic_name):
+    try:
+
+        msg_idx = 0
+        msg_max = 10000
+
+        print('{}: start'.format(datetime.now()))
+        while msg_idx < msg_max:
+            msg_value = "message - [" + str(msg_idx) + "]"
+            send_message(p, topic_name, msg_value)
+            msg_idx = msg_idx + 1
+
+        print('{}: done'.format(datetime.now()))
+    except Exception as ex:
+        print('exception at publish_message_from_console')
+        print(str(ex))
 
 if __name__ == '__main__':
 
@@ -32,14 +49,7 @@ if __name__ == '__main__':
     producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
     print('send message')
-    publish_message_from_console(producer, 'sample')
-
-    #producer.send(topic='sample', value=b'testing-2')
-    #producer.send('sample', b'send message')
-
-    #producer.send('sample', key=b'message-two', value=b'this is first kafka python testing')
-    #producer.flush()
-    #myMessage = input('input message: ')
-    #producer.send('sample', value=myMessage)
+    #publish_message_from_console(producer, 'sample')
+    publish_message_for_performance_test(producer, 'sample')
     print ('done')
 
